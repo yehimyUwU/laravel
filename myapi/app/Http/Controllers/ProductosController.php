@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\producto;
+use App\Models\productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
-class ProductoController extends Controller
+class ProductosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $productos = producto::all();
+        // Obtener todos los productos
+        $productos = \App\Models\productos::all();
+
+        // Retornar la respuesta en formato JSON
         return response()->json($productos);
     }
 
@@ -22,19 +24,18 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        // Validar los datos de entrada
+        $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
             'precio' => 'required|numeric',
             'stock' => 'required|integer',
-            'imagen' => 'nullable|url'
+            'categoria' => 'required|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+        
 
-        $producto = producto::create($request->all());
+        // Retornar la respuesta en formato JSON
         return response()->json($producto, 201);
     }
 
@@ -43,12 +44,16 @@ class ProductoController extends Controller
      */
     public function show(string $id)
     {
-        $producto = producto::find($id);
-        if ($producto) {
-            return response()->json($producto);
-        } else {
+        // Buscar el producto por ID
+        $producto = \App\Models\productos::find($id);
+
+        // Verificar si el producto existe
+        if (!$producto) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
+
+        // Retornar la respuesta en formato JSON
+        return response()->json($producto);
     }
 
     /**
@@ -56,25 +61,25 @@ class ProductoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
+        // Verificar si el producto existe
+        if (!$producto) {
+            return response()->json(['message' => 'Producto no encontrado'], 404);
+        }
+
+        // Validar los datos de entrada
+        $request->validate([
             'nombre' => 'sometimes|required|string|max:255',
             'descripcion' => 'sometimes|required|string|max:255',
             'precio' => 'sometimes|required|numeric',
             'stock' => 'sometimes|required|integer',
-            'imagen' => 'sometimes|nullable|url'
+            'categoria' => 'sometimes|required|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
-        }
 
-        $producto = producto::find($id);
-        if ($producto) {
-            $producto->update($request->all());
-            return response()->json($producto);
-        } else {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
-        }
+        // Retornar la respuesta en formato JSON
+        return response()->json($producto);
     }
 
     /**
@@ -82,12 +87,17 @@ class ProductoController extends Controller
      */
     public function destroy(string $id)
     {
-        $producto = producto::find($id);
-        if ($producto) {
-            $producto->delete();
-            return response()->json(['message' => 'Producto eliminado con éxito']);
-        } else {
+        
+
+        // Verificar si el producto existe
+        if (!$producto) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
+
+        // Eliminar el producto
+        $producto->delete();
+
+        // Retornar la respuesta en formato JSON
+        return response()->json(['message' => 'Producto eliminado con éxito']);
     }
 }

@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\usuario;
+use App\Models\usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class UsuarioController extends Controller
+class UsuariosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $usuarios = usuario::all();
+        $usuarios = usuarios::all();
         return response()->json($usuarios);
     }
-
-     /**
-     * Listar todo
-     */
 
     /**
      * Store a newly created resource in storage.
@@ -34,12 +30,10 @@ class UsuarioController extends Controller
             'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string|max:255',
         ]);
-
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
-
-        $usuarios = usuario::create($validator->validated());
+        $usuarios =usuarios::create($validator->validated());
         return response()->json($usuarios, 201);
     }
 
@@ -48,7 +42,7 @@ class UsuarioController extends Controller
      */
     public function show(string $id)
     {
-        $usuarios = usuario::find($id);
+        $usuarios = usuarios::find($id);
         if (!$usuarios) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
@@ -60,36 +54,37 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $usuarios = usuario::find($id);
+        $usuarios = usuarios::find($id);
         if (!$usuarios) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'nombre' => 'string|max:255',
-            'apellido' => 'string|max:255',
-            'email' => 'string|email|max:255|unique:usuarios,email,' . $id,
-            'password' => 'string|min:8',
+            'nombre' => 'sometimes|required|string|max:255',
+            'apellido' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:usuarios,email,' . $id,
+            'password' => 'sometimes|required|string|min:8',
             'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $usuarios->update($validator->validated());
         return response()->json($usuarios);
     }
 
-    
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(string $id)
     {
-        $usuarios = usuario::find($id);
+        $usuarios = usuarios::find($id);
         if (!$usuarios) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
-
         $usuarios->delete();
         return response()->json(['message' => 'Usuario eliminado con éxito']);
     }

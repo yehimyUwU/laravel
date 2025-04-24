@@ -2,25 +2,27 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\UsuariosController;
+
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::middleware('api')->group(function () {
-    Route::get('listarProducto', [ProductoController::class,'index']);
-    Route::get('producto/{id}', [PedidoController::class,'show']);
-    Route::post('Crearproducto', [ProductoController::class,'store']);
-    Route::put('Actualizarproducto', [ProductoController::class,'update']);
-    Route::delete('Eliminarproducto', [ProductoController::class,'destroy']);
-    Route::get('listarUsuario', [UsuarioController::class,'index']);
-    Route::get('usuario/{id}', [UsuarioController::class,'show']);
-    Route::post('Crearusuario', [UsuarioController::class,'store']);
-    Route::put('Actualizarusuario', [UsuarioController::class,'update']);
-    Route::delete('Eliminarusuario', [UsuarioController::class,'destroy']);
-    Route::get('listarPedido', [PedidoController::class,'index']);
-    Route::get('pedido/{id}', [PedidoController::class,'show']);
-    Route::post('CrearPedido', [PedidoController::class,'store']);
-    Route::put('ActualizarPedido', [PedidoController::class,'update']);
-    Route::delete('EliminarPedido', [PedidoController::class,'destroy']);
+    Route::get('listarProductos', [ProductoController::class,'index']);
+    Route::get('productos/{id}', [PedidoController::class,'show']);
+    Route::post('Crearproductos', [ProductoController::class,'store']);
+    Route::put('Actualizarproductos', [ProductoController::class,'update']);
+    Route::delete('Eliminarproductos', [ProductoController::class,'destroy']);
+    Route::get('listarUsuarios', [UsuariosController::class,'index']);
+    Route::get('usuarios/{id}', [UsuariosController::class,'show']);
+    Route::post('Crearusuarios', [UsuariosController::class,'store']);
+    Route::put('Actualizarusuarios', [UsuariosController::class,'update']);
+    Route::delete('Eliminarusuarios', [UsuariosController::class,'destroy']);
+    Route::get('listarPedidos', [PedidoController::class,'index']);
+    Route::get('pedidos/{id}', [PedidoController::class,'show']);
+    Route::post('CrearPedidos', [PedidoController::class,'store']);
+    Route::put('ActualizarPedidos', [PedidoController::class,'update']);
+    Route::delete('EliminarPedidos', [PedidoController::class,'destroy']);
 });
